@@ -3,620 +3,117 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mind Trap — Игра на реакцию</title>
-
-<style>
-:root {
-    --bg: #0b0b18;
-    --panel: #17172b;
-    --text: #f5f4ff;
-    --muted: #aaa9c6;
-    --pink: #ff4fd8;
-    --cyan: #54f4e8;
-}
-
-* {
-    box-sizing: border-box;
-}
-
-body {
-    margin: 0;
-    min-height: 100vh;
-    background: radial-gradient(circle at 20% 0%, #252052, #101022 45%, #080812);
-    color: var(--text);
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 22px;
-}
-
-.app {
-    width: min(900px, 100%);
-}
-
-.top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-}
-
-.logo {
-    font-size: 14px;
-    letter-spacing: 4px;
-    color: var(--cyan);
-    font-weight: bold;
-}
-
-.logo b {
-    display: block;
-    font-size: 32px;
-    letter-spacing: -1px;
-    color: var(--text);
-    margin-top: 5px;
-}
-
-.pill {
-    border: 1px solid #ffffff20;
-    background: #ffffff09;
-    border-radius: 999px;
-    padding: 10px 14px;
-    color: var(--muted);
-    font-size: 13px;
-}
-
-.panel {
-    background: #111122e8;
-    border: 1px solid #ffffff1c;
-    border-radius: 24px;
-    padding: clamp(20px, 4vw, 38px);
-    box-shadow: 0 25px 90px #0007;
-}
-
-.intro {
-    text-align: center;
-    max-width: 600px;
-    margin: auto;
-}
-
-.tag {
-    display: inline-block;
-    padding: 7px 12px;
-    border: 1px solid #54f4e84c;
-    border-radius: 999px;
-    color: var(--cyan);
-    font-size: 11px;
-    letter-spacing: 2px;
-}
-
-h1 {
-    font-size: clamp(32px, 6vw, 54px);
-    margin: 18px 0 10px;
-    letter-spacing: -1.5px;
-}
-
-.intro p {
-    color: var(--muted);
-    line-height: 1.65;
-    margin: 0 auto 24px;
-    max-width: 510px;
-}
-
-.btn {
-    border: 0;
-    border-radius: 12px;
-    padding: 14px 22px;
-    background: linear-gradient(100deg, var(--pink), #a56bff);
-    color: white;
-    font-size: 15px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.15s;
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-}
-
-.stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin: 24px 0;
-}
-
-.stat {
-    background: #ffffff08;
-    border: 1px solid #ffffff12;
-    border-radius: 14px;
-    padding: 13px;
-    text-align: center;
-}
-
-.stat span {
-    display: block;
-    color: var(--muted);
-    font-size: 11px;
-    margin-bottom: 6px;
-}
-
-.stat strong {
-    font-size: 24px;
-}
-
-.game {
-    display: none;
-}
-
-.game.active {
-    display: block;
-}
-
-.hud {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 18px;
-    color: var(--muted);
-    font-size: 13px;
-    flex-wrap: wrap;
-}
-
-.progress {
-    height: 7px;
-    background: #ffffff12;
-    border-radius: 999px;
-    overflow: hidden;
-    flex: 1;
-    min-width: 90px;
-}
-
-.progress div {
-    height: 100%;
-    width: 100%;
-    background: linear-gradient(90deg, var(--cyan), var(--pink));
-    transition: width 0.2s;
-}
-
-.question {
-    font-size: clamp(22px, 4vw, 34px);
-    text-align: center;
-    margin: 15px 0 8px;
-}
-
-.instruction {
-    text-align: center;
-    color: var(--muted);
-    font-size: 14px;
-    margin-bottom: 25px;
-}
-
-.buttons {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
-    max-width: 520px;
-    margin: auto;
-}
-
-.color-btn {
-    height: clamp(110px, 20vw, 170px);
-    border: 2px solid #ffffff30;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: transform 0.12s, filter 0.12s;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-.color-btn:hover {
-    filter: brightness(1.15);
-    transform: scale(1.02);
-}
-
-.color-btn:active {
-    transform: scale(0.97);
-}
-
-.red {
-    background: linear-gradient(145deg, #ff5470, #b51f50);
-}
-
-.blue {
-    background: linear-gradient(145deg, #4b8dff, #3430a8);
-}
-
-.green {
-    background: linear-gradient(145deg, #42e6ad, #087d79);
-}
-
-.yellow {
-    background: linear-gradient(145deg, #ffe66d, #e88d26);
-    color: #272033;
-}
-
-.feedback {
-    text-align: center;
-    min-height: 30px;
-    margin-top: 18px;
-    font-weight: bold;
-}
-
-.good {
-    color: var(--cyan);
-}
-
-.bad {
-    color: #ff6d8c;
-}
-
-.result {
-    display: none;
-    text-align: center;
-    padding: 12px 0;
-}
-
-.result.active {
-    display: block;
-}
-
-.result-emoji {
-    font-size: 58px;
-}
-
-.result h2 {
-    font-size: 36px;
-    margin: 12px 0;
-}
-
-.result p {
-    color: var(--muted);
-    line-height: 1.7;
-}
-
-.note {
-    font-size: 12px;
-    color: #7e7e9d;
-    text-align: center;
-    margin-top: 18px;
-}
-
-@media (max-width: 500px) {
-    body {
-        padding: 12px;
-    }
-
-    .panel {
-        border-radius: 18px;
-    }
-
-    .stats {
-        gap: 7px;
-    }
-
-    .stat {
-        padding: 11px 5px;
-    }
-
-    .stat strong {
-        font-size: 20px;
-    }
-
-    .buttons {
-        gap: 10px;
-    }
-}
-</style>
+<title>Турагентство «Даль»</title>
+<link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
 
-<div class="app">
+<header class="header">
+  <div class="container header-inner">
+    <a href="#" class="logo">Даль</a>
+    <nav class="nav">
+      <a href="#tours">Направления</a>
+      <a href="#about">Почему мы</a>
+      <a href="#contacts">Контакты</a>
+    </nav>
+  </div>
+</header>
 
-    <div class="top">
-        <div class="logo">
-            REACTION LAB
-            <b>Mind Trap<span style="color:var(--pink)">.</span></b>
+<section class="hero">
+  <div class="container">
+    <h1>Туры по России и миру</h1>
+    <p>Подберём маршрут, купим билеты и забронируем отель. Работаем с 2010 года.</p>
+
+    <form class="search" action="#" method="get">
+      <div class="search-field">
+        <label for="where">Куда</label>
+        <input type="text" id="where" placeholder="Например, Байкал">
+      </div>
+      <div class="search-field">
+        <label for="date">Дата поездки</label>
+        <input type="text" id="date" placeholder="Июль">
+      </div>
+      <div class="search-field">
+        <label for="people">Туристы</label>
+        <input type="text" id="people" placeholder="2 взрослых">
+      </div>
+      <button type="submit" class="btn">Найти тур</button>
+    </form>
+  </div>
+</section>
+
+<section class="section" id="tours">
+  <div class="container">
+    <h2>Популярные направления</h2>
+    <div class="cards">
+      <article class="card">
+        <img src="img/baikal.jpg" alt="Озеро Байкал">
+        <div class="card-body">
+          <h3>Байкал</h3>
+          <p>7 дней, экскурсии на Ольхон и КБЖД</p>
+          <div class="price">от 54 000 ₽</div>
         </div>
-
-        <div class="pill">⚡ Мини-игра на реакцию</div>
+      </article>
+      <article class="card">
+        <img src="img/altai.jpg" alt="Горный Алтай">
+        <div class="card-body">
+          <h3>Горный Алтай</h3>
+          <p>5 дней, рафтинг и конные прогулки</p>
+          <div class="price">от 38 000 ₽</div>
+        </div>
+      </article>
+      <article class="card">
+        <img src="img/kamchatka.jpg" alt="Камчатка">
+        <div class="card-body">
+          <h3>Камчатка</h3>
+          <p>10 дней, вулканы и Тихий океан</p>
+          <div class="price">от 96 000 ₽</div>
+        </div>
+      </article>
     </div>
+  </div>
+</section>
 
-    <section class="panel" id="startScreen">
-
-        <div class="intro">
-            <div class="tag">Твой мозг против таймера</div>
-
-            <h1>
-                Не дай себя
-                <span style="color:var(--pink)">обмануть.</span>
-            </h1>
-
-            <p>
-                Жми на цвет, который написан в задании.
-                У тебя 30 секунд! За правильные ответы
-                получай очки, а за ошибки теряй их.
-            </p>
-
-            <button class="btn" onclick="startGame()">
-                НАЧАТЬ ИГРУ ↗
-            </button>
-        </div>
-
-        <div class="stats">
-            <div class="stat">
-                <span>Лучший счёт</span>
-                <strong id="bestStart">0</strong>
-            </div>
-
-            <div class="stat">
-                <span>Игр сыграно</span>
-                <strong id="gamesStart">0</strong>
-            </div>
-
-            <div class="stat">
-                <span>Время</span>
-                <strong>30 сек</strong>
-            </div>
-        </div>
-
-    </section>
-
-    <section class="panel game" id="gameScreen">
-
-        <div class="hud">
-            <span>⏱ Осталось: <b id="time">30</b> сек</span>
-
-            <div class="progress">
-                <div id="timeBar"></div>
-            </div>
-
-            <span>Раунд <b id="round">1</b></span>
-        </div>
-
-        <div class="question" id="question">
-            НАЖМИ: КРАСНЫЙ
-        </div>
-
-        <div class="instruction">
-            Выбирай кнопку по названию цвета в задании.
-        </div>
-
-        <div class="buttons">
-
-            <button class="color-btn red"
-                onclick="chooseColor('Красный')">
-                КРАСНЫЙ
-            </button>
-
-            <button class="color-btn blue"
-                onclick="chooseColor('Синий')">
-                СИНИЙ
-            </button>
-
-            <button class="color-btn green"
-                onclick="chooseColor('Зелёный')">
-                ЗЕЛЁНЫЙ
-            </button>
-
-            <button class="color-btn yellow"
-                onclick="chooseColor('Жёлтый')">
-                ЖЁЛТЫЙ
-            </button>
-
-        </div>
-
-        <div class="feedback" id="feedback"></div>
-
-    </section>
-
-    <section class="panel result" id="resultScreen">
-
-        <div class="result-emoji" id="resultEmoji">🏆</div>
-
-        <h2 id="resultTitle">Отличная реакция!</h2>
-
-        <p id="resultText"></p>
-
-        <div class="stats">
-            <div class="stat">
-                <span>Твой счёт</span>
-                <strong id="finalScore">0</strong>
-            </div>
-
-            <div class="stat">
-                <span>Рекорд</span>
-                <strong id="bestFinal">0</strong>
-            </div>
-
-            <div class="stat">
-                <span>Раундов</span>
-                <strong id="roundFinal">0</strong>
-            </div>
-        </div>
-
-        <button class="btn" onclick="startGame()">
-            ИГРАТЬ ЕЩЁ ↻
-        </button>
-
-        <button class="btn"
-            style="background:#292943; margin-left:7px"
-            onclick="showHome()">
-            В МЕНЮ
-        </button>
-
-    </section>
-
-    <div class="note">
-        MIND TRAP · Проверь свою реакцию 😈
+<section class="section section-alt" id="about">
+  <div class="container">
+    <h2>Почему выбирают нас</h2>
+    <div class="features">
+      <div class="feature">
+        <h3>15 лет на рынке</h3>
+        <p>Более 12 000 туристов отправились в поездки с нами.</p>
+      </div>
+      <div class="feature">
+        <h3>Договор и страховка</h3>
+        <p>Официальный договор, медицинская страховка включена в цену.</p>
+      </div>
+      <div class="feature">
+        <h3>Поддержка 24/7</h3>
+        <p>Менеджер на связи в течение всей поездки.</p>
+      </div>
+      <div class="feature">
+        <h3>Рассрочка 0%</h3>
+        <p>Оплата тура частями до 6 месяцев без переплат.</p>
+      </div>
     </div>
+  </div>
+</section>
 
-</div>
-
-<script>
-const colorNames = [
-    "Красный",
-    "Синий",
-    "Зелёный",
-    "Жёлтый"
-];
-
-let score = 0;
-let round = 0;
-let timeLeft = 30;
-let timer = null;
-let target = "";
-let locked = false;
-
-let games = Number(
-    localStorage.getItem("mindTrapGames") || 0
-);
-
-let best = Number(
-    localStorage.getItem("mindTrapBest") || 0
-);
-
-function updateHomeStats() {
-    document.getElementById("bestStart").textContent = best;
-    document.getElementById("gamesStart").textContent = games;
-}
-
-function showHome() {
-    clearInterval(timer);
-
-    document.getElementById("startScreen").style.display = "block";
-    document.getElementById("gameScreen").classList.remove("active");
-    document.getElementById("resultScreen").classList.remove("active");
-
-    updateHomeStats();
-}
-
-function startGame() {
-    clearInterval(timer);
-
-    score = 0;
-    round = 0;
-    timeLeft = 30;
-    locked = false;
-
-    document.getElementById("startScreen").style.display = "none";
-    document.getElementById("resultScreen").classList.remove("active");
-    document.getElementById("gameScreen").classList.add("active");
-
-    document.getElementById("feedback").textContent = "";
-    document.getElementById("time").textContent = timeLeft;
-    document.getElementById("timeBar").style.width = "100%";
-
-    nextQuestion();
-
-    timer = setInterval(function() {
-        timeLeft--;
-
-        document.getElementById("time").textContent = timeLeft;
-
-        document.getElementById("timeBar").style.width =
-            (timeLeft / 30 * 100) + "%";
-
-        if (timeLeft <= 0) {
-            endGame();
-        }
-    }, 1000);
-}
-
-function nextQuestion() {
-    round++;
-
-    target = colorNames[
-        Math.floor(Math.random() * colorNames.length)
-    ];
-
-    document.getElementById("round").textContent = round;
-
-    document.getElementById("question").textContent =
-        "НАЖМИ: " + target.toUpperCase();
-
-    document.getElementById("feedback").textContent = "";
-    document.getElementById("feedback").className = "feedback";
-
-    locked = false;
-}
-
-function chooseColor(color) {
-    if (locked || timeLeft <= 0) {
-        return;
-    }
-
-    locked = true;
-
-    const feedback = document.getElementById("feedback");
-
-    if (color === target) {
-        score += 10;
-
-        feedback.textContent = "ТОЧНО! +10 очков ⚡";
-        feedback.className = "feedback good";
-    } else {
-        score = Math.max(0, score - 5);
-
-        feedback.textContent = "Мимо! −5 очков 😵";
-        feedback.className = "feedback bad";
-    }
-
-    setTimeout(function() {
-        if (timeLeft > 0) {
-            nextQuestion();
-        }
-    }, 260);
-}
-
-function endGame() {
-    clearInterval(timer);
-
-    document.getElementById("gameScreen").classList.remove("active");
-    document.getElementById("resultScreen").classList.add("active");
-
-    games++;
-
-    if (score > best) {
-        best = score;
-    }
-
-    localStorage.setItem("mindTrapGames", games);
-    localStorage.setItem("mindTrapBest", best);
-
-    document.getElementById("finalScore").textContent = score;
-    document.getElementById("bestFinal").textContent = best;
-    document.getElementById("roundFinal").textContent = round - 1;
-
-    if (score >= 200) {
-        document.getElementById("resultEmoji").textContent = "🧠";
-        document.getElementById("resultTitle").textContent = "Ты — машина!";
-        document.getElementById("resultText").textContent =
-            "Невероятная реакция! Даже ловушки тебя не остановят.";
-    } else if (score >= 100) {
-        document.getElementById("resultEmoji").textContent = "⚡";
-        document.getElementById("resultTitle").textContent = "Хорошая реакция!";
-        document.getElementById("resultText").textContent =
-            "Неплохо! Попробуй ещё раз и побей свой рекорд.";
-    } else {
-        document.getElementById("resultEmoji").textContent = "🫠";
-        document.getElementById("resultTitle").textContent =
-            "Мозг ещё загружается…";
-        document.getElementById("resultText").textContent =
-            "Не сдавайся! Тренируйся и попробуй улучшить результат.";
-    }
-
-    updateHomeStats();
-}
-
-updateHomeStats();
-</script>
+<footer class="footer" id="contacts">
+  <div class="container footer-inner">
+    <div class="footer-col">
+      <h4>Турагентство «Даль»</h4>
+      <p>ул. Ленина, 21, офис 305<br>Пн–Пт 9:00–19:00</p>
+    </div>
+    <div class="footer-col">
+      <h4>Контакты</h4>
+      <p>+7 (900) 222-33-44<br>travel@dal.tours</p>
+    </div>
+    <div class="footer-col">
+      <h4>Мы в соцсетях</h4>
+      <p><a href="#">ВКонтакте</a><br><a href="#">Telegram</a></p>
+    </div>
+  </div>
+</footer>
 
 </body>
 </html>
-
